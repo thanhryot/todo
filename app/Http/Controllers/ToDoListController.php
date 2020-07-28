@@ -7,6 +7,11 @@ use App\Http\Requests\TodoRequest;
 
 class ToDoListController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(ToDoList::class, 'todo');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -75,11 +80,8 @@ class ToDoListController extends Controller
      */
     public function update(TodoRequest $request, ToDoList $todo)
     {
-        
-        if($todo->user_id == auth()->id()){
-            $todo->item = $request->item;
-            $todo->save();
-        }
+        $todo->item = $request->item;
+        $todo->save();
         
         return redirect()->route('todos.index');
     }

@@ -24,6 +24,9 @@ Route::post('/signup', "AuthController\SignupController@signup")->name('signup')
 
 Route::get('/logout', "AuthController\LoginController@logout")->name('logout');
 
-Route::resource('todos', 'ToDoListController');
+Route::middleware('auth')->group(function () {
 
-Route::get('/switch/{id}', "ToDoListController@switch")->name('todo.switch');
+	Route::resource('todos', 'ToDoListController');
+
+	Route::get('/switch/{id}', "ToDoListController@switch")->name('todo.switch');
+});
