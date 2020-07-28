@@ -3,7 +3,7 @@
 
 @section('main')
 
-@if(count(auth()->user()->todo_lists))
+@if(count($todo_lists))
 <table style="border-collapse: collapse;">
 	<tr>
 		<th>Order</th>
@@ -12,7 +12,7 @@
 		<th>Action</th>
 	</tr>
 
-	@foreach(auth()->user()->todo_lists as $todo_list)
+	@foreach($todo_lists as $todo_list)
 	<tr>
 		<td>{{ $loop->iteration }}</td>
 		<td><a href="{{ route('todos.show', ['todo' => $todo_list->id]) }}">{{ $todo_list->item }}</a></td>
@@ -36,6 +36,9 @@
 
 	@endforeach
 </table>
+
+{{-- pagination --}}
+{{ $todo_lists->links() }}
 
 @endif
 

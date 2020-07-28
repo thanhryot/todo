@@ -7,6 +7,8 @@ use App\Http\Requests\TodoRequest;
 
 class ToDoListController extends Controller
 {
+    const NUMBER_OF_PAGES = 10;
+
     public function __construct()
     {
         $this->authorizeResource(ToDoList::class, 'todo');
@@ -19,7 +21,9 @@ class ToDoListController extends Controller
      */
     public function index()
     {
-        return view('frontend_v1.pages.todos.index');
+        $todo_lists = ToDoList::where('user_id', auth()->id())->paginate(self::NUMBER_OF_PAGES);
+
+        return view('frontend_v1.pages.todos.index', compact('todo_lists'));
     }
 
     /**
