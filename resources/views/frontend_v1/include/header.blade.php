@@ -1,11 +1,10 @@
+@if(auth()->user())
 
-@if(auth()->id())
+Hello, {{ auth()->user()->name }}
 
-Xin chào, {{ auth()->user()->name }}
-
-<a href="{{ route('logout') }}">Đăng xuất</a>
+<a href="{{ route('logout') }}">Logout</a>
 @else
 
-<a href="{{ route('login') }}">Đăng nhập</a> | <a href="{{ route('signup') }}">Đăng kí</a>
+<a href="{{ route('login') }}">Login</a> | <a href="{{ route('signup') }}">Signup</a>
 
 @endif

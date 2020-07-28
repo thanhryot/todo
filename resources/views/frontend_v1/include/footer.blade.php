@@ -1,1 +1,1 @@
-<i>https://github.com/thanhryot</i>
+Made by <a href="https://github.com/thanhryot" target="_blank"><i>Thanh Ryot</i></a> with ❤️ for Laravel!

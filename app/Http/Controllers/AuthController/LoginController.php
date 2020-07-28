@@ -16,11 +16,12 @@ class LoginController extends Controller
     	$credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            return redirect()->route('home');
+            return redirect()->intended(route('todos.index'));
         }
 
-        return 1;
-
+        return redirect()->back()->withErrors([
+            'approve' => 'Incorrect password or account',
+        ]);
     }
 
     public function logout(){

@@ -23,3 +23,7 @@ Route::get('/signup', "AuthController\SignupController@index")->name('signup-ind
 Route::post('/signup', "AuthController\SignupController@signup")->name('signup');
 
 Route::get('/logout', "AuthController\LoginController@logout")->name('logout');
+
+Route::resource('todos', 'ToDoListController');
+
+Route::get('/switch/{id}', "ToDoListController@switch")->name('todo.switch');
