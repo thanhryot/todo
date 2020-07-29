@@ -1,10 +1,12 @@
-@if(auth()->user())
+<div class="pt-3">
+	@if(auth()->user())
 
-Hello, {{ auth()->user()->name }}
+	Hello, <b>{{ auth()->user()->name }}</b>
 
-<a href="{{ route('logout') }}">Logout</a>
-@else
+	<a href="{{ route('logout') }}">Logout</a>
+	@else
 
-<a href="{{ route('login') }}">Login</a> | <a href="{{ route('signup') }}">Signup</a>
+	<a href="{{ route('login') }}">Login</a> | <a href="{{ route('signup') }}">Signup</a>
 
-@endif
+	@endif
+</div>

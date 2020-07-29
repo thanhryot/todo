@@ -3,8 +3,15 @@
 
 @section('main')
 
-{{ $todo->item }}
-<hr>
-<input type="checkbox" @if($todo->is_done) checked @endif>
+<h1>{{ $todo->item }}</h1>
+@if($todo->is_done)
+
+<p class="text-success">Finished !!</p>
+@else
+
+<p class="text-warning">Unfinished !!</p>
+
+@endif
+
 
 @endsection

@@ -4,12 +4,12 @@
 @section('main')
 
 @if(count($todo_lists))
-<table style="border-collapse: collapse;">
+<table class="table table-hover table-striped table-responsive">
 	<tr>
-		<th>Order</th>
-		<th>Item</th>
-		<th>Status</th>
-		<th>Action</th>
+		<th class="w-25">Order</th>
+		<th class="w-25">Item</th>
+		<th class="w-25">Status</th>
+		<th class="w-25">Action</th>
 	</tr>
 
 	@foreach($todo_lists as $todo_list)
@@ -22,14 +22,14 @@
 			</form>
 		</td>
 		<td>
-			<form action="{{ route('todos.edit',['todo' => $todo_list->id]) }}">
-				<input type="submit" value="Edit" style="color: blue">
+			<form style="display: inline-block;" action="{{ route('todos.edit',['todo' => $todo_list->id]) }}">
+				<input type="submit" value="Edit" class="btn btn-small btn-info">
 			</form>
 
-			<form action="{{ route('todos.destroy',['todo' => $todo_list->id]) }}" method="POST">
+			<form style="display: inline-block;" action="{{ route('todos.destroy',['todo' => $todo_list->id]) }}" method="POST">
 	 			{{ method_field('DELETE') }}
 				{{ csrf_field() }}
-				<input type="submit" value="Delete" style="color: red">
+				<input type="submit" value="Delete" class="btn btn-small btn-danger">
 			</form>
 		</td>
 	</tr>
