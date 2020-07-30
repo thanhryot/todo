@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Model\ToDoList;
+use App\Model\Activity;
 use App\Http\Requests\TodoRequest;
+use App\Core\Activity as ActivityCore;
 
 class ToDoListController extends Controller
 {
@@ -44,11 +46,19 @@ class ToDoListController extends Controller
      */
     public function store(TodoRequest $request)
     {
-        $todo = new ToDoList;
 
-        $todo->item = $request->item;
-        $todo->user_id = auth()->id();
-        $todo->save();
+        $user_id = auth()->id();
+
+        \DB::transaction(function () use ($request, $user_id){
+
+            ToDoList::create(['item' => $request->item, 'user_id' => $user_id]);
+
+            Activity::create([
+                'content' => ActivityCore::makeMessage('create', auth()->user()->name, $request->item), 
+                'user_id' => $user_id
+            ]);
+
+        });
 
         return redirect()->route('todos.index');
     }
@@ -84,8 +94,18 @@ class ToDoListController extends Controller
      */
     public function update(TodoRequest $request, ToDoList $todo)
     {
-        $todo->item = $request->item;
-        $todo->save();
+
+        \DB::transaction(function() use ($request, $todo){
+
+            $todo->item = $request->item;
+            $todo->save();
+
+            Activity::create([
+                'content' => ActivityCore::makeMessage('update', auth()->user()->name, $request->item), 
+                'user_id' => auth()->id()
+            ]);
+
+        });
         
         return redirect()->route('todos.index');
     }
@@ -98,7 +118,17 @@ class ToDoListController extends Controller
      */
     public function destroy(ToDoList $todo)
     {
-        $todo->delete();
+        \DB::transaction(function() use ($todo){
+
+            $todo->delete();
+
+            Activity::create([
+                'content' => ActivityCore::makeMessage('delete', auth()->user()->name, $todo->item), 
+                'user_id' => auth()->id()
+            ]);
+
+        });
+        
         return redirect()->route('todos.index');
     }
 

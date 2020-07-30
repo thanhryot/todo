@@ -29,4 +29,7 @@ Route::middleware('auth')->group(function () {
 	Route::resource('todos', 'ToDoListController');
 
 	Route::get('/switch/{id}', "ToDoListController@switch")->name('todo.switch');
+
+	Route::get('/activity', "ActivityController@index")->name('activity.index');
+
 });

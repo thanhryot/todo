@@ -41,6 +41,10 @@ class User extends Authenticatable
         return $this->hasMany('App\Model\ToDoList');
     }
 
+    public function activities(){
+        return $this->hasMany('App\Model\Activity');
+    }
+
     public function setPasswordAttribute($value) {
         $this->attributes['password'] = Hash::make($value);
     }
