@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Model\ToDoList;
 use App\Model\Activity;
 use App\Http\Requests\TodoRequest;
+use Illuminate\Http\Request;
 use App\Core\Activity as ActivityCore;
 
 class ToDoListController extends Controller
@@ -132,15 +133,15 @@ class ToDoListController extends Controller
         return redirect()->route('todos.index');
     }
 
-    public function switch($id){
-        $todo = ToDoList::find($id);
+    public function switch(Request $request){
+        $todo = ToDoList::find($request->id);
         if($todo->is_done){
             $todo->is_done = 0;
         }else{
             $todo->is_done = 1;
         }
         $todo->save();
-        
-        return redirect()->route('todos.index');
+
+        return response()->json(['message' => 'Changed successfully!']);
     }
 }

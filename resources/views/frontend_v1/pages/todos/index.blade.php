@@ -17,9 +17,7 @@
 		<td>{{ $loop->iteration }}</td>
 		<td><a href="{{ route('todos.show', ['todo' => $todo_list->id]) }}">{{ $todo_list->item }}</a></td>
 		<td>
-			<form action="{{ route('todo.switch', ['id' => $todo_list->id]) }}">
-				<input type="checkbox" onchange="this.form.submit()" @if($todo_list->is_done) checked @endif>
-			</form>
+			<input class="todo-check" data-id="{{ $todo_list->id }}" type="checkbox" @if($todo_list->is_done) checked @endif>
 		</td>
 		<td>
 			<form style="display: inline-block;" action="{{ route('todos.edit',['todo' => $todo_list->id]) }}">
@@ -43,3 +41,7 @@
 @endif
 
 @endsection
+
+@push('scripts')
+<script src="/js/app.js"></script>
+@endpush
