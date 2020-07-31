@@ -32,4 +32,13 @@ Route::middleware('auth')->group(function () {
 
 	Route::get('/activity', "ActivityController@index")->name('activity.index');
 
+	Route::get('/favorite', "FavoriteController@index")->name('favorite.index');
+
+	Route::get('/favorite/get', "FavoriteController@getToRedis")->name('favorite.get');
+
+	Route::get('/favorite/set/{user_id}/{item}', "FavoriteController@setToRedis")->name('favorite.set');
+
+	Route::get('/favorite/clear', "FavoriteController@clear")->name('favorite.clear');
+
+
 });

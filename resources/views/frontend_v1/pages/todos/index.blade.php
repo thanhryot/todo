@@ -29,6 +29,7 @@
 				{{ csrf_field() }}
 				<input type="submit" value="Delete" class="btn btn-small btn-danger">
 			</form>
+			<a href="{{ route('favorite.set', ['user_id' => auth()->id(), 'item' => $todo_list->item]) }}" class="btn btn-warning">Favorite</a>
 		</td>
 	</tr>
 

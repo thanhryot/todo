@@ -7,6 +7,8 @@
 	
 	<a href="{{ route('activity.index') }}">Activities Log</a> |
 
+	<a href="{{ route('favorite.index') }}">My Favorite</a> |
+
 	<a href="{{ route('logout') }}">Logout</a>
 	@else
 
