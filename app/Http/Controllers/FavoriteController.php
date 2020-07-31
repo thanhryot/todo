@@ -22,8 +22,13 @@ class FavoriteController extends Controller
     public function getToRedis(){
     	$user_id = auth()->id();
     	$keys = Redis::command('keys', ["*favorite:$user_id*"]);
+    	
+    	if(sizeof($keys) > 0){
+    		return Redis::command('mget', $keys );
+    	}
 
-	    return Redis::command('mget', $keys );
+    	return [];
+	    
     }
 
     public function clear(){

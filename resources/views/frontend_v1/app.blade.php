@@ -22,7 +22,7 @@
                 <hr>
 
                 @if(auth()->check())
-                    <div class="mb-3"><a href="{{ route('todos.create') }}" class="btn btn-success">Add new</a></div>
+                    <div class="mb-3"><a href="{{ route('todos.create') }}" class="btn btn-success">Add new todo</a></div>
                 @endif
                 
                 @yield('main')
