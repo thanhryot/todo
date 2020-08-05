@@ -6,14 +6,15 @@ use App\Model\ToDoList;
 use App\Model\Activity;
 use App\Http\Requests\TodoRequest;
 use Illuminate\Http\Request;
-use App\Core\Activity as ActivityCore;
+use App\Repositories\ToDoListRepository;
 
 class ToDoListController extends Controller
 {
-    const NUMBER_OF_PAGES = 10;
+    protected $toDoListRepository;
 
-    public function __construct()
+    public function __construct(ToDoListRepository $toDoListRepository)
     {
+        $this->toDoListRepository = $toDoListRepository;
         $this->authorizeResource(ToDoList::class, 'todo');
     }
 
@@ -24,7 +25,7 @@ class ToDoListController extends Controller
      */
     public function index()
     {
-        $todo_lists = ToDoList::where('user_id', auth()->id())->paginate(self::NUMBER_OF_PAGES);
+        $todo_lists = $this->toDoListRepository->getAllByUserId(auth()->id());
 
         return view('frontend_v1.pages.todos.index', compact('todo_lists'));
     }
@@ -48,18 +49,7 @@ class ToDoListController extends Controller
     public function store(TodoRequest $request)
     {
 
-        $user_id = auth()->id();
-
-        \DB::transaction(function () use ($request, $user_id){
-
-            ToDoList::create(['item' => $request->item, 'user_id' => $user_id]);
-
-            Activity::create([
-                'content' => ActivityCore::makeMessage('create', auth()->user()->name, $request->item), 
-                'user_id' => $user_id
-            ]);
-
-        });
+        $this->toDoListRepository->createAndMakeActivity($request->item);
 
         return redirect()->route('todos.index');
     }
@@ -96,17 +86,7 @@ class ToDoListController extends Controller
     public function update(TodoRequest $request, ToDoList $todo)
     {
 
-        \DB::transaction(function() use ($request, $todo){
-
-            $todo->item = $request->item;
-            $todo->save();
-
-            Activity::create([
-                'content' => ActivityCore::makeMessage('update', auth()->user()->name, $request->item), 
-                'user_id' => auth()->id()
-            ]);
-
-        });
+        $this->toDoListRepository->updateAndMakeActivity($request->item, $todo->id);
         
         return redirect()->route('todos.index');
     }
@@ -119,28 +99,14 @@ class ToDoListController extends Controller
      */
     public function destroy(ToDoList $todo)
     {
-        \DB::transaction(function() use ($todo){
-
-            $todo->delete();
-
-            Activity::create([
-                'content' => ActivityCore::makeMessage('delete', auth()->user()->name, $todo->item), 
-                'user_id' => auth()->id()
-            ]);
-
-        });
+        $this->toDoListRepository->deleteAndMakeActivity($todo->item, $todo->id);
         
         return redirect()->route('todos.index');
     }
 
     public function switch(Request $request){
-        $todo = ToDoList::find($request->id);
-        if($todo->is_done){
-            $todo->is_done = 0;
-        }else{
-            $todo->is_done = 1;
-        }
-        $todo->save();
+
+        $this->toDoListRepository->switchStatus($request->id);
 
         return response()->json(['message' => 'Changed successfully!']);
     }

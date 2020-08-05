@@ -7,13 +7,15 @@ use App\Model\ToDoList;
 use App\Http\Requests\TodoRequest;
 use App\Http\Resources\ToDoList as ToDoListResource;
 use Illuminate\Http\Response;
+use App\Repositories\ToDoListRepository;
 
 class TodoListController extends Controller
 {
-    const NUMBER_OF_PAGES = 25;
+    protected $toDoListRepository;
 
-    public function __construct()
+    public function __construct(ToDoListRepository $toDoListRepository)
     {
+        $this->toDoListRepository = $toDoListRepository;
         $this->authorizeResource(ToDoList::class, 'todo');
     }
     /**
@@ -23,7 +25,7 @@ class TodoListController extends Controller
      */
     public function index()
     {
-        return ToDoListResource::collection(ToDoList::paginate(self::NUMBER_OF_PAGES));
+        return ToDoListResource::collection($this->toDoListRepository->getAllByUserId(auth()->id()));
     }
 
     /**
@@ -34,10 +36,7 @@ class TodoListController extends Controller
      */
     public function store(TodoRequest $request)
     {
-        $todo = ToDoList::create([
-            'item' => $request->item,
-            'user_id' => auth()->id()
-        ]);
+        $todo = $this->toDoListRepository->createAndMakeActivity($request->item);
 
         return response()->json($todo, Response::HTTP_CREATED);
     }
@@ -63,7 +62,7 @@ class TodoListController extends Controller
      */
     public function update(TodoRequest $request, ToDoList $todo)
     {
-        $todo->update($request->all());
+        $todo = $this->toDoListRepository->updateAndMakeActivity($request->item, $todo->id);
 
         return response()->json($todo, Response::HTTP_OK);
     }
@@ -76,8 +75,8 @@ class TodoListController extends Controller
      */
     public function destroy(ToDoList $todo)
     {
-        $todo->delete();
+        $this->toDoListRepository->deleteAndMakeActivity($todo->item, $todo->id);
 
-        return response()->json("Deleted", Response::HTTP_NO_CONTENT);
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }
